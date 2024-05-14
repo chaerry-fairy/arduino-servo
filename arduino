@@ -1,0 +1,39 @@
+#include <Servo.h>
+
+Servo myServo;  // Create a servo object
+
+const int servoPin = 9;
+const int irSensorPin = 2;
+const int rotations = 5;
+
+void setup() {
+  myServo.attach(servoPin);  // Attach the servo to pin 9
+  pinMode(irSensorPin, INPUT);  // Set the IR sensor pin as input
+  myServo.write(0);  // Move servo to the starting position (0 degrees)
+  Serial.begin(9600);  // Initialize serial communication
+}
+
+void loop() {
+  int sensorValue = digitalRead(irSensorPin);  // Read the value from the IR sensor
+  
+  if (sensorValue == HIGH) {  // If motion is detected
+    Serial.println("Motion detected!");
+    for (int i = 0; i < rotations; i++) {
+      rotateServo360();  // Rotate the servo 360 degrees
+    }
+  }
+  
+  delay(1000);  // Wait for 1 second before checking the sensor again
+}
+
+void rotateServo360() {
+  for (int angle = 0; angle <= 180; angle += 10) {  // Move servo from 0 to 180 degrees
+    myServo.write(angle);
+    delay(15);  // Wait for the servo to reach the position
+  }
+  
+  for (int angle = 180; angle >= 0; angle -= 10) {  // Move servo from 180 to 0 degrees
+    myServo.write(angle);
+    delay(15);  // Wait for the servo to reach the position
+  }
+}
